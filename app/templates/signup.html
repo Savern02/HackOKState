@@ -26,11 +26,11 @@
                         {% endwith %}
 
                         <form method="post" action="{{ url_for('auth.signup') }}">
-                            {# CSRF: supports Flask-WTF or a simple csrf_token() helper #}
+                            {# CSRF: supports Flask-WTF or a csrf_token() helper if provided by your app #}
                             {% if form %}
                                 {{ form.hidden_tag() }}
-                            {% else %}
-                                {{ csrf_token() }}
+                            {% elif csrf_token is defined %}
+                                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             {% endif %}
 
                             <div class="mb-3">
