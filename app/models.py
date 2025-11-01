@@ -49,18 +49,14 @@ class GroupMember(db.Model):
 
 class Org(db.Model):
 	__tablename__ = 'org'
+	org_name = db.Column(db.String(255), nullable=False)
 	org_id = db.Column(db.BigInteger, primary_key=True)
+	creator_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id'))
 
 	requests = db.relationship('Request', back_populates='org', lazy='dynamic')
 
 	def __repr__(self):
 		return f"<Org {self.org_id}>"
-
-
-class OrgRep(db.Model):
-	__tablename__ = 'org_rep'
-	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id'), primary_key=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id'))
 
 
 class Request(db.Model):
