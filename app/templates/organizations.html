@@ -1,0 +1,16 @@
+{% extends 'base.html' %} 
+
+{% block title %} VolunTold {% endblock %}
+
+{% block content %}
+<div class="container mt-5 mx-2">
+    <h1> Organizations </h1>
+    <ul>
+    {% for org in orgs %}
+        <li> 
+            <a href="{{ url_for('org.org_detail', org_id=org.org_id) }}">{{ org.org_name }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

@@ -23,8 +23,8 @@ class User(db.Model, UserMixin):
 
 class Friends(db.Model):
 	__tablename__ = 'friends'
-	friend_a = db.Column(db.BigInteger, db.ForeignKey('user.user_id'), primary_key=True)
-	friend_b = db.Column(db.BigInteger, db.ForeignKey('user.user_id'), primary_key=True)
+	friend_a = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_friends_friend_a_user_user_id'), primary_key=True)
+	friend_b = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_friends_friend_b_user_user_id'), primary_key=True)
 
 	def __repr__(self):
 		return f"<Friends {self.friend_a} - {self.friend_b}>"
@@ -43,15 +43,15 @@ class Group(db.Model):
 
 class GroupMember(db.Model):
 	__tablename__ = 'group_member'
-	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id'), primary_key=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id'), primary_key=True)
+	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id', name='fk_group_member_group_id_group_group_id'), primary_key=True)
+	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_group_member_user_id_user_user_id'), primary_key=True)
 
 
 class Org(db.Model):
 	__tablename__ = 'org'
+	org_id = db.Column(db.Integer, primary_key=True)
 	org_name = db.Column(db.String(255), nullable=False)
-	org_id = db.Column(db.BigInteger, primary_key=True)
-	creator_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id'))
+	creator_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_org_creator_id_user_user_id'))
 
 	requests = db.relationship('Request', back_populates='org', lazy='dynamic')
 
@@ -62,7 +62,7 @@ class Org(db.Model):
 class Request(db.Model):
 	__tablename__ = 'request'
 	request_id = db.Column(db.BigInteger, primary_key=True)
-	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id'))
+	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_request_org_id_org_org_id'))
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 
@@ -88,9 +88,9 @@ class Scrape(db.Model):
 class Promotes(db.Model):
 	__tablename__ = 'promotes'
 	promotes_id = db.Column(db.BigInteger, primary_key=True)
-	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id'))
-	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id'), nullable=True)
-	request_id = db.Column(db.BigInteger, db.ForeignKey('request.request_id'), nullable=True)
+	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id', name='fk_promotes_group_id_group_group_id'))
+	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id', name='fk_promotes_scrape_id_scrape_scrape_id'), nullable=True)
+	request_id = db.Column(db.BigInteger, db.ForeignKey('request.request_id', name='fk_promotes_request_id_request_request_id'), nullable=True)
 	type = db.Column(db.String(50), nullable=True)
 
 	def __repr__(self):
@@ -100,9 +100,9 @@ class Promotes(db.Model):
 class Pledge(db.Model):
 	__tablename__ = 'pledge'
 	pledge_id = db.Column(db.BigInteger, primary_key=True)
-	request_id = db.Column(db.BigInteger, db.ForeignKey('request.request_id'), nullable=True)
-	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id'), nullable=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id'))
+	request_id = db.Column(db.BigInteger, db.ForeignKey('request.request_id', name='fk_pledge_request_id_request_request_id'), nullable=True)
+	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id', name='fk_pledge_scrape_id_scrape_scrape_id'), nullable=True)
+	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_pledge_user_id_user_user_id'))
 	type = db.Column(db.String(50), nullable=True)
 
 	user = db.relationship('User', back_populates='pledges')

@@ -1,8 +1,8 @@
 """initial migration
 
-Revision ID: 8e42804729c9
+Revision ID: 5d5faa1a9385
 Revises: 
-Create Date: 2025-11-01 15:08:49.173446
+Create Date: 2025-11-01 16:56:50.641129
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '8e42804729c9'
+revision = '5d5faa1a9385'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,10 +21,6 @@ def upgrade():
     op.create_table('group',
     sa.Column('group_id', sa.BigInteger(), nullable=False),
     sa.PrimaryKeyConstraint('group_id')
-    )
-    op.create_table('org',
-    sa.Column('org_id', sa.BigInteger(), nullable=False),
-    sa.PrimaryKeyConstraint('org_id')
     )
     op.create_table('scrape',
     sa.Column('scrape_id', sa.BigInteger(), nullable=False),
@@ -56,11 +52,11 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('group_id', 'user_id')
     )
-    op.create_table('org_rep',
+    op.create_table('org',
+    sa.Column('org_name', sa.String(length=255), nullable=False),
     sa.Column('org_id', sa.BigInteger(), nullable=False),
-    sa.Column('user_id', sa.BigInteger(), nullable=True),
-    sa.ForeignKeyConstraint(['org_id'], ['org.org_id'], ),
-    sa.ForeignKeyConstraint(['user_id'], ['user.user_id'], ),
+    sa.Column('creator_id', sa.BigInteger(), nullable=True),
+    sa.ForeignKeyConstraint(['creator_id'], ['user.user_id'], ),
     sa.PrimaryKeyConstraint('org_id')
     )
     op.create_table('request',
@@ -101,11 +97,10 @@ def downgrade():
     op.drop_table('promotes')
     op.drop_table('pledge')
     op.drop_table('request')
-    op.drop_table('org_rep')
+    op.drop_table('org')
     op.drop_table('group_member')
     op.drop_table('friends')
     op.drop_table('user')
     op.drop_table('scrape')
-    op.drop_table('org')
     op.drop_table('group')
     # ### end Alembic commands ###
