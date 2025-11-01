@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Sign Up</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h3 class="card-title mb-4">Create an account</h3>
+
+                        {% with messages = get_flashed_messages(with_categories=true) %}
+                            {% if messages %}
+                                {% for category, message in messages %}
+                                    <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        {% endwith %}
+
+                        <form method="post" action="{{ url_for('auth.signup') }}">
+                            {# CSRF: supports Flask-WTF or a simple csrf_token() helper #}
+                            {% if form %}
+                                {{ form.hidden_tag() }}
+                            {% else %}
+                                {{ csrf_token() }}
+                            {% endif %}
+
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input id="username" name="username" type="text" class="form-control" required
+                                             value="{{ (form.username.data if form and form.username.data else request.form.get('username','')) }}">
+                                {% if form and form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="email" class="form-label">Email</label>
+                                <input id="email" name="email" type="email" class="form-control" required
+                                             value="{{ (form.email.data if form and form.email.data else request.form.get('email','')) }}">
+                                {% if form and form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="password" class="form-label">Password</label>
+                                <input id="password" name="password" type="password" class="form-control" required>
+                                {% if form and form.password.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="confirm_password" class="form-label">Confirm password</label>
+                                <input id="confirm_password" name="confirm_password" type="password" class="form-control" required>
+                                {% if form and form.confirm_password.errors %}
+                                    <div class="text-danger small mt-1">{{ form.confirm_password.errors[0] }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Sign up</button>
+                            </div>
+                        </form>
+
+                        <hr class="my-4">
+                        <p class="text-center mb-0">Already have an account?
+                            <a href="{{ url_for('auth.login') }}">Log in</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
