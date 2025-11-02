@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %} VolunTold {% endblock %}
+
+{% block content %}
+
+<div align="right">
+<form action="/request_string" method="post">
+		<label for="volunteer-link">
+			Enter A Volunteer Opportunity Link:
+		</label>
+		<input type="text" id="volunteer-link" name="data" required>
+		<button type="submit">Submit</button>
+	</form>
+</div>
+
+<div class="container mt-5 mx-2">
+	<h1>
+		Discover A Volunteer Opportunity Near You
+	</h1>
+
+
+
+	
+	<form action="{{ url_for('discover.locations_redirection') }}" method="post">
+		<label for="/locations_redirection">
+			Select Your Location:
+		</label>
+		<select id="location" name="location">
+			{% for l in loc %}
+        	<option value="{{ l.location }}">{{ l.location }}</option>
+    		{% endfor %}
+		</select>
+		<button type="submit">Select</button>
+	</form>
+
+</div>
+{% endblock %}

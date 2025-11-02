@@ -125,8 +125,11 @@ class Opportunity(db.Model):
 
 class Scrape(db.Model):
 	__tablename__ = 'scrape'
-	scrape_id = db.Column(db.BigInteger, primary_key=True)
-	title = db.Column(db.String(255), nullable=True)
+	scrape_id = db.Column(db.Integer, primary_key=True)
+	#attributes from the scrape
+	name = db.Column(db.String(255), nullable=True)
+	link = db.Column(db.String(500), nullable=True)
+	location = db.Column(db.String(100), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 
 	pledges = db.relationship('Pledge', back_populates='scrape', lazy='dynamic')
