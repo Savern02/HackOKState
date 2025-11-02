@@ -3,30 +3,34 @@
 {% block title %}Request Volunteers{% endblock %}
 
 {% block content %}
-<h1>
-    Request Volunteers
-    <h3>Please fill out the form below to request volunteers for your opportunity:</h3>
-    <form id="Opportunity Form" method="post" action="{{ request.path }}">
-        <div class="mb-3">
-            <label for="title" class="form-label">Opportunity Title</label>
-            <input type="text" name="title" placeholder="Opportunity Title" required>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+    <div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-center">Tell us about your opportunity:</h4>
+                <form method="post" action="{{ request.path }}">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Title</label>
+                        <input type="text" class="form-control" name="title" placeholder="Opportunity Title" required autofocus>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <input type="text" class="form-control" name="description" placeholder="Description" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="org-id" class="form-label">Select Organization</label>
+                        <select class="form-select form-control" id="org-id" name="org-id">
+                            {% for org in org_options %}
+                                <option value="{{ org.org_id }}">{{ org.org_name }}</option>
+                            {% endfor %}
+                        </select>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Create Opportunity</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <div class="mb-3">
-            <label for="description" class="form-label">Description</label>
-            <textarea name="description" placeholder="Description" required></textarea>
-        </div>
-        <div class="mb-3">
-            <form action="/submit-form" method="post">
-            <label for="org-id">Choose an organization:</label>
-            <select id="org-id" name="org-id">
-                {% for org in org_options %}
-                    <option value="{{ org.org_id }}">{{ org.org_name }}</option>
-                {% endfor %}
-            </select>
-            <button type="submit">Submit</button>
-            </form>
-        </div>
-    </form>
-</h1>
+    </div>
+</div>
 
 {% endblock %}

@@ -3,36 +3,46 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>Welcome back, {{ current_user.username }}!</h2>
-    <p>Explore <a href="{{ url_for('org.organizations') }}">organizations</a> and <a href="{{ url_for('opportunity.opportunities') }}">opportunities</a> to get involved.</p>
-</div>
-<hr>
-{% if organization_opportunities|length > 0 %}
-<section class = "container mt-5">
-    <h3>From Your Organizations</h3>
-    {% for org in current_user.get_orgs() %}
-        <h4><a href="{{ url_for('org.org_detail', org_id=org.org_id) }}">{{ org.org_name }}</a> {{ org.get_opportunities_count_label() }}</h4>
-        {% if org.get_opportunities_count() > 0 %}
-            <ul>
-            {% for opp in org.get_opportunities() %}
-                <li><a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}">{{ opp.title }}</a></li>
-            {% endfor %}
-            </ul>
-        {% endif %}
-    {% else %}
-        <p>You are not a member of any organizations yet. <a href="{{ url_for('org.organizations') }}">Browse organizations</a> to join one!</p>
-    {% endfor %}
-</section> 
-{% endif %}
+<div class="container">
+    <div class="jumbotron jumbotron-fluid text-center my-4">
+        <h1>Welcome back, {{ current_user.username }}!</h1>
+        <p>Explore <a href="{{ url_for('org.organizations') }}">organizations</a> and <a href="{{ url_for('opportunity.opportunities') }}">opportunities</a> to get involved.</p>
+    </div>
+    <hr>
+    {% if organization_opportunities|length > 0 %}
+    <section class = "container mt-5">
+        <h3>From Your Organizations</h3>
+        {% for org in current_user.get_orgs() %}
+            {% if org.get_opportunities_count() > 0 %}
+            <div class="card-deck">
+                {% for opp in org.get_opportunities() %}
+                    <div class="card col-sm-2">
+                        <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}"> <div class="card-body">
+                            <h5 class="card-title">{{ opp.title }}</h5>
+                            <p class="card-text">{{ opp.small_description() }}</p>
+                        </div> </a>
+                        
+                        <div class="card-footer">
+                            <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=org.org_id) }}">{{ org.org_name }}</a></small>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        {% else %}
+            <p>You are not a member of any organizations yet. <a href="{{ url_for('org.organizations') }}">Browse organizations</a> to join one!</p>
+        {% endfor %}
+    </section> 
+    {% endif %}
 
-{% if friend_opportunities|length > 0 %}
-<hr>
-<section class = "container mt-5">
-    <h3>Friend Activity</h3>
-    {% for opp in friend_opportunities %}
-        <p>{{opp.name}}</p>
-    {% endfor %}
-</section>
-{% endif %}
+    {% if friend_opportunities|length > 0 %}
+    <hr>
+    <section class = "container mt-5">
+        <h3>Friend Activity</h3>
+        {% for opp in friend_opportunities %}
+            <p>{{opp.name}}</p>
+        {% endfor %}
+    </section>
+    {% endif %}
+</div>
 {% endblock %}

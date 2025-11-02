@@ -3,16 +3,23 @@
 {% block title %}Request Volunteers{% endblock %}
 
 {% block content %}
-<h1>
-    Create Organization
-    <h3>Please fill out the form below to create a new organization:</h3>
-    <form method="post" action="{{ request.path }}">
-        <div class="mb-3">
-            <label for="org_name" class="form-label">Organization Name</label>
-            <input type="text" id="org_name" name="org_name" placeholder="Org Name" required>
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+<div class="col-12 col-sm-8 col-md-6 col-lg-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h4 class="card-title mb-3 text-center">Name your organization:</h4>
+                <form method="post" action="{{ request.path }}">
+                    <div class="mb-3">
+                        <label for="org_name" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="org_name" name="org_name" required autofocus>
+                    </div>       
+
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary">Create Organization</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        <button type="submit">Submit</button>
-    </form>
-</h1>
+</div>
 
 {% endblock %}
