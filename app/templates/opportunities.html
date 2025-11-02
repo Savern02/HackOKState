@@ -1,18 +1,19 @@
 {% extends 'base.html' %} 
 
-{% block title %} VolunTold {% endblock %}
+{% block title %} Opportunities {% endblock %}
 
 {% block content %}
 <div class="container">
     <div class="jumbotron jumbotron-fluid text-center my-4">
         <h1> Opportunities </h1>
+        <a href="{{ url_for('opportunity.create_opportunity') }}" class="btn btn-primary mt-2">Create New Opportunity</a>
     </div>
     <hr>
     <section class="container mt-3 mb-3">
         <h2 class="mb-3">Latest Opportunities</h2>
-        <div class="card-deck">
+        <div class="card-deck row">
         {% for opportunity in opportunities %}
-            <div class="card col-sm-2">
+            <div class="card col-sm-2 mx-2">
                 <div class="card-body">
                     <h5 class="card-title">{{ opportunity.title }}</h5>
                     <p class="card-text">{{ opportunity.small_description() }}</p>
@@ -28,9 +29,9 @@
     <hr>
     <section class="container mt-3 mb-3">
         <h2 class="mb-3">Popular Opportunities</h2>
-        <div class="card-deck">
+        <div class="card-deck row">
         {% for opportunity in popular_opportunities %}
-            <div class="card col-sm-2">
+            <div class="card col-sm-2 mx-2">
                 <div class="card-body">
                     <h5 class="card-title">{{ opportunity.title }}</h5>
                     <p class="card-text">{{ opportunity.small_description() }}</p>
@@ -49,16 +50,16 @@
         <h2 class="mb-3">From Your Organizations</h2>
         {% for org in current_user.get_orgs() %}
             {% if org.get_opportunities_count() > 0 %}
-            <div class="card-deck">
+            <div class="card-deck row">
                 {% for opp in org.get_opportunities() %}
-                    <div class="card col-sm-2">
-                        <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}"> <div class="card-body">
+                    <div class="card col-sm-2 mx-2">
+                        <div class="card-body">
                             <h5 class="card-title">{{ opp.title }}</h5>
                             <p class="card-text">{{ opp.small_description() }}</p>
-                        </div> </a>
-                        
+                            <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}" class="btn btn-primary">View Details</a>
+                        </div>
                         <div class="card-footer">
-                            <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=org.org_id) }}">{{ org.org_name }}</a></small>
+                            <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=opp.org_id) }}">{{ opp.get_org().org_name }}</a></small>
                         </div>
                     </div>
                 {% endfor %}

@@ -14,16 +14,16 @@
         <h3>From Your Organizations</h3>
         {% for org in current_user.get_orgs() %}
             {% if org.get_opportunities_count() > 0 %}
-            <div class="card-deck">
+            <div class="card-deck row">
                 {% for opp in org.get_opportunities() %}
-                    <div class="card col-sm-2">
-                        <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}"> <div class="card-body">
+                    <div class="card col-sm-2 mx-2">
+                        <div class="card-body">
                             <h5 class="card-title">{{ opp.title }}</h5>
                             <p class="card-text">{{ opp.small_description() }}</p>
-                        </div> </a>
-                        
+                            <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}" class="btn btn-primary">View Details</a>
+                        </div>
                         <div class="card-footer">
-                            <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=org.org_id) }}">{{ org.org_name }}</a></small>
+                            <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=opp.org_id) }}">{{ opp.get_org().org_name }}</a></small>
                         </div>
                     </div>
                 {% endfor %}
