@@ -3,15 +3,13 @@ from flask_login import current_user, login_required
 from .models import Opportunity, Org, User
 from . import db
 
-import sqlite3
-
 opportunity_bp = Blueprint('opportunity', __name__)
 
 @opportunity_bp.route('/opportunity')
-def opportunity_page():
-    return render_template('opportunity.html')
+def opportunities():
+    return render_template('opportunities.html')
 
-@opportunity_bp.route('/opportunity', methods=['POST'])
+@opportunity_bp.route('/create-opportunity', methods=['POST'])
 def create_opportunity():
     title = request.form.get('title')
     org_id = request.form.get('org_id')
@@ -23,7 +21,7 @@ def create_opportunity():
     db.session.commit()
 
     flash('Volunteer request submitted successfully!', 'success')
-    return redirect(url_for('opportunity.opportunity_page'))
+    return render_template('create-opportunity.html')
 
 @opportunity_bp.route('/opportunity')
 @login_required
