@@ -1,16 +1,20 @@
 import requests
 from bs4 import BeautifulSoup
 import logging
-from openai import OpenAI
 import os
 from dotenv import load_dotenv
 import json
 from .models import Scrape
 from . import db
 from urllib.parse import urljoin
+from google import genai
+from google.genai import types 
+from typing import List, TypedDict, Literal # Use for schema definition
+import typing
+from pydantic import BaseModel, Field
+
 
 # ---------- html ---------- \
-#TODO: add a url based off a list of urls.txt 
 def getHTML(url):
     response = requests.get(url)
     if response.status_code != 200:
@@ -23,75 +27,52 @@ def getHTML(url):
 # def parseHTML(html_data):
 #     soup = BeautifulSoup(html_data, "html.parser")
 #     return soup.body.get_text(separator="\n", strip=True)
-# ------------------Open AI ---------------------------
-ai_key = os.environ["OPEN_AI_KEY"]
+# ------------------Google Gemini ---------------------------
+class Opportunity(BaseModel):
+    name: str = Field(description="The name of the volunteer opportunity.")
+    link: str = Field(description="The absolute URL link for the opportunity.")
+    location: str = Field(description="The City and full State name, or 'United States' if not found.")
+    description: str = Field(description="A medium-length description of the work.")
+    work_type: str = Field(description="The category or type of work (e.g., 'Environmental', 'Education').")
+class Opportunities(BaseModel):
+    opportunities: List[Opportunity] = Field(..., description="A list of opportunities.")
 
-client = OpenAI(
-  base_url="https://openrouter.ai/api/v1",
-  api_key= ai_key,
+ai_key = os.environ["GEMINI_KEY"]
+client = genai.Client(api_key=ai_key)
 
-)
-def call_openai(html_data: str):
-    response = client.chat.completions.create(
-    model="google/gemini-2.0-flash-lite-001",
-    messages=[
-
-            {"role": "system", "content": "You are an HTML parser. Analyze HTML content and extract links (links start with https:\\), locations, and descriptions."},
-            { "role": "user", "content": html_data},
-            { "role": "user", "content": "What volunteer opportunities are there? "},
-     ],
-   response_format={
-            "type": "json_schema",
-            "json_schema": {
-                "name": "html_parser",
-                "strict": True,
-                "schema": {
-                    "type": "object",
-                    "properties": {
-                        "opportunities": {
-                            "type": "array",
-                            "items": {
-                                "type": "object",
-                                "properties": {
-                                    "name": {
-                                        "type": "string",
-                                        "description": "name of listing from the HTML"
-                                    },
-                                    "link": {
-                                        "type": "string",
-                                        "description": "link to the listing"
-                                    },
-                                    "location": {
-                                        "type": "string",
-                                        "description": "Give the full state name of the location only, default to United States if not found"
-                                    },
-                                    "description": {
-                                        "type": "string",
-                                        "description": "Give a medium description"
-                                    }
-                                },
-                                "required": ["name", "link",  "location", "description"],
-                                "additionalProperties": False
-                            }
-                        }
-                    },
-                    "required": ["opportunities"],
-                    "additionalProperties": False
-                }
-            }
-        }
+def call_gemini(html_data: str):
+    system_prompt = (
+        "You are an HTML parser. Analyze the following HTML content and extract opportunities, return **AS MUCH AS POSSIBLE** "
+        "Extract the name, link , location (as City & full state name, defaulting to 'United States' if not found), "
+        "a medium-length description and type of work."
     )
-    print(len(response.choices))
-    return response.choices[0].message.content
 
+    # **Structured Output Configuration**
+# 2. Define the Configuration (JSON Mode & System Prompt)
+    config = types.GenerateContentConfig(
+        system_instruction=system_prompt,  # <-- Use this parameter!
+        response_mime_type="application/json",
+            response_schema= Opportunities, 
+    )
+    contents  = "What volunteer opportunities are there? Respond only with the JSON object following the schema. " + html_data
+
+    
+    # **The core API call**
+    response = client.models.generate_content(
+        model="gemini-2.5-flash", # A powerful and fast model for structured extraction
+        contents=contents,
+        config=config
+    )
+    
+    # The response.text will contain the strict JSON string
+    return response.text
 
   
-#TODO: Send parse JSON from each site and send it to database where it will be compiled 
 def accept_link_to_scrape(url):
     load_dotenv() #load key from .env file
-    result = call_openai(getHTML(url))
+    result = call_gemini(getHTML(url))
     if result == None:
-        logging.error(msg)
+        logging.error("Failed to get HTML or AI response." + msg)
     with open("response.json", "w") as file:
         file.write(result)
 
@@ -112,6 +93,9 @@ def load_json_to_db(url):
         db.session.add(new_record)
     
     db.session.commit()
+ 
 
 if __name__ == "__main__":
-    load_json_to_db()
+    test_url = "https://www.cityoftulsa.org/serve-tulsans/organizations/list-of-organizations/"
+    accept_link_to_scrape(test_url)
+    
