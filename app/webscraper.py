@@ -4,12 +4,15 @@ import logging
 from openai import OpenAI
 import os
 from dotenv import load_dotenv
+import json
+from .models import Scrape
+from . import db
+from urllib.parse import urljoin
 
 # ---------- html ---------- \
 #TODO: add a url based off a list of urls.txt 
-DEFAULT_URL = "https://www.cityoftulsa.org/serve-tulsans/volunteers/find-an-opportunity/"
-def getHTML():
-    response = requests.get(DEFAULT_URL)
+def getHTML(url):
+    response = requests.get(url)
     if response.status_code != 200:
         logging.error("Failed:", response.status_code)
         return
@@ -58,12 +61,16 @@ def call_openai(html_data: str):
                                         "type": "string",
                                         "description": "link to the listing"
                                     },
+                                    "location": {
+                                        "type": "string",
+                                        "description": "Give the full state name of the location only, default to United States if not found"
+                                    },
                                     "description": {
                                         "type": "string",
-                                        "description": "location followed by a short description"
+                                        "description": "Give a medium description"
                                     }
                                 },
-                                "required": ["name", "link", "description"],
+                                "required": ["name", "link",  "location", "description"],
                                 "additionalProperties": False
                             }
                         }
@@ -80,11 +87,31 @@ def call_openai(html_data: str):
 
   
 #TODO: Send parse JSON from each site and send it to database where it will be compiled 
-if __name__ == "__main__":
-    load_dotenv()  # Add this at the start of your script
-    result = call_openai(getHTML())
+def accept_link_to_scrape(url):
+    load_dotenv() #load key from .env file
+    result = call_openai(getHTML(url))
     if result == None:
         logging.error(msg)
     with open("response.json", "w") as file:
         file.write(result)
 
+
+
+def load_json_to_db(url):
+    with open("app/response.json", 'r') as f:
+        data = json.load(f)  # Parse JSON → Python list/dict
+    opportunities = data.get("opportunities", [])
+    for entry in opportunities:
+        # Create a Scrape object for each JSON record
+        new_record = Scrape(
+            name=entry.get('name'),
+            link="".join(urljoin(url, entry.get('link'))),
+            location=entry.get('location'),
+            description=entry.get('description')
+        )
+        db.session.add(new_record)
+    
+    db.session.commit()
+
+if __name__ == "__main__":
+    load_json_to_db()
