@@ -38,5 +38,11 @@ def create_app():
 
     from .org import org as org_blueprint
     app.register_blueprint(org_blueprint)
+
+    from .user import users as user_blueprint
+    app.register_blueprint(user_blueprint)
+
+    from .opportunity import opportunity_bp as opportunity_blueprint
+    app.register_blueprint(opportunity_blueprint)
     
     return app

@@ -17,7 +17,7 @@ def create_org():
         db.session.add(new_org)
         db.session.commit()
 
-        flash('Organization created successfully!', 'success')
+        # flash('Organization created successfully!', 'success')
         return redirect(url_for('org.org_detail', org_id=new_org.org_id), 302)
     elif request.method == 'GET':
         return render_template('create-org.html')
