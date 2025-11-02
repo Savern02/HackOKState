@@ -1,3 +1,4 @@
 instance
 .sh 
 migrations
+docker-compose.yml
