@@ -1,0 +1,18 @@
+{% extends 'base.html' %} 
+
+{% block title %}Request Volunteers{% endblock %}
+
+{% block content %}
+<h1>
+    Create Organization
+    <h3>Please fill out the form below to create a new organization:</h3>
+    <form method="post" action="{{ request.path }}">
+        <div class="mb-3">
+            <label for="org_name" class="form-label">Organization Name</label>
+            <input type="text" id="org_name" name="org_name" placeholder="Org Name" required>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</h1>
+
+{% endblock %}

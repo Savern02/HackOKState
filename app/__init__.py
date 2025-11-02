@@ -35,5 +35,8 @@ def create_app():
     
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)
+
+    from .org import org as org_blueprint
+    app.register_blueprint(org_blueprint)
     
     return app
