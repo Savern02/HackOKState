@@ -7,15 +7,11 @@ import sqlite3
 
 opportunity_bp = Blueprint('opportunity', __name__)
 
-<<<<<<< Updated upstream
 @opportunity_bp.route('/opportunity')
 def opportunity_page():
     return render_template('opportunity.html')
 
 @opportunity_bp.route('/opportunity', methods=['POST'])
-=======
-@opportunity_bp.route('/create-opportunity', methods=['POST'])
->>>>>>> Stashed changes
 def create_opportunity():
     title = request.form.get('title')
     org_id = request.form.get('org_id')
