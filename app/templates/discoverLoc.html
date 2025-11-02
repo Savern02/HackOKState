@@ -3,36 +3,49 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-
-<div align="right">
-<form action="/request_string" method="post">
-		<label for="volunteer-link">
-			Enter A Volunteer Opportunity Link:
-		</label>
-		<input type="text" id="volunteer-link" name="data" required>
-		<button type="submit">Submit</button>
-	</form>
-</div>
-
-<div class="container mt-5 mx-2">
-	<h1>
-		Discover A Volunteer Opportunity Near You
-	</h1>
-
-
-
-	
-	<form action="{{ url_for('discover.locations_redirection') }}" method="post">
-		<label for="/locations_redirection">
-			Select Your Location:
-		</label>
-		<select id="location" name="location">
-			{% for l in loc %}
-        	<option value="{{ l.location }}">{{ l.location }}</option>
-    		{% endfor %}
-		</select>
-		<button type="submit">Select</button>
-	</form>
-
+<div class="container">
+	<div class="jumbotron jumbotron-fluid text-center my-4">
+		<h1> Discover Volunteer Opportunities Near You </h1>
+		<h3 class="text-muted"> Select your location: </h3>
+		<div class="row justify-content-center mt-4 mb-4">
+			<div class="col-lg-4">
+				<form method="post" action="{{ url_for('discover.locations_redirection') }}">
+					<div class="form-group">
+						<div class="input-group">
+							<select id="location" name="location" required class="form-control discover-loc-select">
+								{% for l in loc %}
+								<option value="{{ l.location }}">{{ l.location }}</option>
+								{% endfor %}
+							</select>
+							<div class="input-group-append">
+								<button type="submit" class="form-control btn btn-primary discover-loc-submit">See
+									Opportunities</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<hr>
+	<section class="container mt-3 mb-3 text-center my-4">
+		<h3>Found Opportunities Online?</h3>
+		<h5 class="text-muted">Submit a link:</h5>
+		<div class="row justify-content-center">
+			<div class="col-lg-4">
+				<form action="/request_string" method="post" class="mt-4">
+					<div class="form-group mb-3">
+						<div class="input-group">
+							<input type="url" id="volunteer-link" name="data" required class="form-control"
+								placeholder="https://example.com/volunteer-opportunity">
+							<div class="input-group-append">
+								<button type="submit" class="btn btn-secondary">Submit Link</button>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</section>
 </div>
 {% endblock %}
