@@ -22,7 +22,7 @@
             {{ current_user.username }}
         </button>
         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarUserDropdown">
-            <li><a class="dropdown-item" href="{{ url_for('main.profile') }}">Profile</a></li>
+            <li><a class="dropdown-item" href="{{ url_for('users.user_profile', username=current_user.username) }}">Profile</a></li>
             <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
         </ul>
     </li>
