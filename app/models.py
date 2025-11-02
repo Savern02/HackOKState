@@ -159,6 +159,16 @@ class Opportunity(db.Model):
 
 	def get_pledged_users(self):
 		return User.query.join(Pledge, Pledge.user_id == User.user_id).filter(Pledge.opp_id == self.opp_id).all()
+	
+	def is_pledged_by(self, user):
+		pledge = Pledge.query.filter_by(opp_id=self.opp_id, user_id=user.user_id).first()
+		return pledge is not None
+
+	def add_pledged_user(self, user):
+		if not self.is_pledged_by(user):
+			new_pledge = Pledge(opp_id=self.opp_id, user_id=user.user_id)
+			db.session.add(new_pledge)
+			db.session.commit()
 
 class Scrape(db.Model):
 	__tablename__ = 'scrape'

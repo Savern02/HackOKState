@@ -34,6 +34,8 @@ def opp_detail(opp_id):
         Opportunity.opp_id == opp_id, Pledge.user_id == current_user.user_id).count() > 0 if current_user.is_authenticated else False
     return render_template('opp_detail.html', opportunity=opportunity, user_is_pledged=user_is_pledged)
 
+
+@opportunity_bp.route('/opportunities/<int:opp_id>/pledge', methods=['POST'])
 def pledge(opp_id):
     opportunity = Opportunity.query.get_or_404(opp_id)
     if not opportunity.is_pledged_by(current_user):
