@@ -1,0 +1,16 @@
+{% extends 'base.html' %} 
+
+{% block title %} VolunTold {% endblock %}
+
+{% block content %}
+<div class="container mt-5 mx-2">
+    <h1> Opportunities </h1>
+    <ul>
+    {% for opportunity in opportunities %}
+        <li> 
+            <a href="{{ url_for('opportunity.opp_detail', opp_id=opportunity.opp_id) }}">{{ opportunity.title }}</a>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}

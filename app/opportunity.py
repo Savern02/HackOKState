@@ -30,4 +30,15 @@ def get_current_user_orgs():
 
     results = Org.query.filter_by(creator_id=current_user.user_id).all()
 
-    return render_template('opportunity.html', orgs=results)
+    return render_template('create-opportunity.html', orgs=results)
+
+
+@opportunity_bp.route('/opportunities', methods=['GET'])
+def opportunities():
+    opportunities = Opportunity.query.all()
+    return render_template('opportunities.html', opportunities=opportunities)
+
+@opportunity_bp.route('/opportunities/<int:opp_id>', methods=['GET'])
+def opp_detail(opp_id):
+    opportunity = Opportunity.query.get_or_404(opp_id)
+    return render_template('opp_detail.html', opportunity=opportunity)
