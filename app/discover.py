@@ -18,7 +18,7 @@ def select_region():
 def request_string():
     async def func(): 
         data = request.form.get('data')  # get the string from form data
-        #accept_link_to_scrape(data)
+        accept_link_to_scrape(data)
         load_json_to_db(data)  # process the string as needed
     asyncio.run(func()) 
     return redirect(url_for('discover.select_region'))  # redirect back to the locations page

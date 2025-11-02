@@ -6,6 +6,7 @@ from . import db
 opportunity_bp = Blueprint('opportunity', __name__)
 
 @opportunity_bp.route('/opportunities/create', methods=['GET', 'POST'])
+@login_required
 def create_opportunity():
     if request.method == 'GET':
         org_options = current_user.organizations
@@ -37,6 +38,7 @@ def opp_detail(opp_id):
 
 
 @opportunity_bp.route('/opportunities/<int:opp_id>/pledge', methods=['POST'])
+@login_required
 def pledge(opp_id):
     opportunity = Opportunity.query.get_or_404(opp_id)
     if not opportunity.is_pledged_by(current_user):
