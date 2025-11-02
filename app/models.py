@@ -82,8 +82,8 @@ class User(db.Model, UserMixin):
 
 class Friends(db.Model):
 	__tablename__ = 'friends'
-	friend_a = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_friends_friend_a_user_user_id'), primary_key=True)
-	friend_b = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_friends_friend_b_user_user_id'), primary_key=True)
+	friend_a = db.Column(db.Integer, db.ForeignKey('user.user_id', name='fk_friends_friend_a_user_user_id'), primary_key=True)
+	friend_b = db.Column(db.Integer, db.ForeignKey('user.user_id', name='fk_friends_friend_b_user_user_id'), primary_key=True)
 	accepted = db.Column(db.Boolean, default=False)
 
 	def __repr__(self):
@@ -93,7 +93,7 @@ class Org(db.Model):
 	__tablename__ = 'org'
 	org_id = db.Column(db.Integer, primary_key=True)
 	org_name = db.Column(db.String(255), nullable=False)
-	creator_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_org_creator_id_user_user_id'))
+	creator_id = db.Column(db.Integer, db.ForeignKey('user.user_id', name='fk_org_creator_id_user_user_id'))
 
 	opportunitys = db.relationship('Opportunity', back_populates='org', lazy='dynamic')
 
@@ -133,8 +133,8 @@ class Org(db.Model):
 
 class OrgMember(db.Model):
 	__tablename__ = 'org_member'
-	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_org_member_org_id_org_org_id'), primary_key=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_org_member_user_id_user_user_id'), primary_key=True)
+	org_id = db.Column(db.Integer, db.ForeignKey('org.org_id', name='fk_org_member_org_id_org_org_id'), primary_key=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', name='fk_org_member_user_id_user_user_id'), primary_key=True)
 
 	def __repr__(self):
 		return f"<OrgMember org={self.org_id} user={self.user_id}>"
@@ -143,7 +143,7 @@ class OrgMember(db.Model):
 class Opportunity(db.Model):
 	__tablename__ = 'opportunity'
 	opp_id = db.Column(db.Integer, primary_key=True)
-	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'))
+	org_id = db.Column(db.Integer, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'))
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 	timestamp = db.Column(db.DateTime, nullable=True)
@@ -154,10 +154,15 @@ class Opportunity(db.Model):
 	def __repr__(self):
 		return f"<opportunity {self.opp_id} org={self.org_id}>"
 
+	def get_org(self):
+		return Org.query.get(self.org_id)
+
+	def get_pledged_users(self):
+		return User.query.join(Pledge, Pledge.user_id == User.user_id).filter(Pledge.opp_id == self.opp_id).all()
 
 class Scrape(db.Model):
 	__tablename__ = 'scrape'
-	scrape_id = db.Column(db.BigInteger, primary_key=True)
+	scrape_id = db.Column(db.Integer, primary_key=True)
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 
@@ -168,10 +173,10 @@ class Scrape(db.Model):
 
 class Pledge(db.Model):
 	__tablename__ = 'pledge'
-	pledge_id = db.Column(db.BigInteger, primary_key=True)
-	opp_id = db.Column(db.BigInteger, db.ForeignKey('opportunity.opp_id', name='fk_pledge_opp_id_opportunity_opp_id'), nullable=True)
-	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id', name='fk_pledge_scrape_id_scrape_scrape_id'), nullable=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_pledge_user_id_user_user_id'))
+	pledge_id = db.Column(db.Integer, primary_key=True)
+	opp_id = db.Column(db.Integer, db.ForeignKey('opportunity.opp_id', name='fk_pledge_opp_id_opportunity_opp_id'), nullable=True)
+	scrape_id = db.Column(db.Integer, db.ForeignKey('scrape.scrape_id', name='fk_pledge_scrape_id_scrape_scrape_id'), nullable=True)
+	user_id = db.Column(db.Integer, db.ForeignKey('user.user_id', name='fk_pledge_user_id_user_user_id'))
 	type = db.Column(db.String(50), nullable=True)
 
 	user = db.relationship('User', back_populates='pledges')

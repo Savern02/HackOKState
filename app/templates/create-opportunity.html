@@ -19,7 +19,7 @@
             <form action="/submit-form" method="post">
             <label for="org-select">Choose an organization:</label>
             <select id="org-select" name="org">
-                {% for org in orgs %}
+                {% for org in org_options %}
                     <option value="{{ org.org_id }}">{{ org.org_name }}</option>
                 {% endfor %}
             </select>
