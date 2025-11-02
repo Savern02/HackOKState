@@ -33,3 +33,10 @@ def opp_detail(opp_id):
     user_is_pledged = Opportunity.query.join(Opportunity.pledges).filter(
         Opportunity.opp_id == opp_id, Pledge.user_id == current_user.user_id).count() > 0 if current_user.is_authenticated else False
     return render_template('opp_detail.html', opportunity=opportunity, user_is_pledged=user_is_pledged)
+
+def pledge(opp_id):
+    opportunity = Opportunity.query.get_or_404(opp_id)
+    if not opportunity.is_pledged_by(current_user):
+        opportunity.add_pledged_user(current_user)
+        # flash('You have pledged for this opportunity!', 'success')
+    return redirect(url_for('opportunity.opp_detail', opp_id=opp_id), 302)
