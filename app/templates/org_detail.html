@@ -1,12 +1,13 @@
 {% extends 'base.html' %} 
 
-{% block title %} VolunTold {% endblock %}
+{% block title %} {{organization.org_name}} {% endblock %}
 
 {% block content %}
-<div class="container mt-5 mx-2">
-    <h1> {{ organization.org_name }} </h1>
-    <div class="">
-        <h4 class="text-muted"> Made by <a href="{{ url_for('users.user_profile', username=ownername) }}"> {{ ownername }} </a></h4>
+<div class="container">
+    <div class="jumbotron jumbotron-fluid text-center my-4">
+        <h1> {{ organization.org_name }} </h1>
+        <h5> By <a href="{{ url_for('users.user_profile', username=ownername) }}">{{ ownername }}</a></h5>
+        {% if current_user.is_authenticated %}
         <form method="post" action="{{ url_for('org.join_org', org_id=organization.org_id) }}">
             {% if current_user.is_authenticated and not organization.is_member_of(current_user) %}
                 <button type="submit" class="btn btn-primary">Join Organization</button>
@@ -16,27 +17,27 @@
                 <p><a href="{{ url_for('auth.login') }}">Log in</a> to join this organization.</p>
             {% endif %}
         </form>
-    </div>
-    <hr>
-    <h3 class="mt-4"> Opportunities {{ organization.get_opportunities_count_label() }}</h3>
-    <div class="list-group">
-        {% for opportunity in organization.get_opportunities() %}
-            <a href="{{ url_for('opportunity.opp_detail', opp_id=opportunity.opp_id) }}" class="list-group-item list-group-item-action">
-                <h5 class="mb-1">{{ opportunity.title }}</h5>
-                <p class="mb-1">{{ opportunity.description }}</p>
-            </a>
         {% else %}
-            <p>No opportunities available at the moment.</p>
-        {% endfor %}
-    </div> 
-    <hr>
-    <h3 class="mt-4"> Members ({{ organization.get_member_count() }}) </h3>
-    <div class="list-group">
-        {% for member in organization.get_members() %}
-            <a href="{{ url_for('users.user_profile', username=member.username) }}" class="list-group-item list-group-item-action">
-                {{ member.username }}
-            </a>
-        {% endfor %}
+            <p><a href="{{ url_for('auth.login') }}">Log in</a> to join this organization.</p>
+        {% endif %}
     </div>
+    <hr>
+    <section class="container mt-3 mb-3">
+        <h3 class="mb-3">Opportunities</h2>
+        <div class="card-deck row">
+            {% for opp in organization.get_opportunities() %}
+                <div class="card col-sm-2 mx-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ opp.title }}</h5>
+                        <p class="card-text">{{ opp.small_description() }}</p>
+                        <a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}" class="btn btn-primary">View Details</a>
+                    </div>
+                    <div class="card-footer">
+                        <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=opp.org_id) }}">{{ opp.get_org().org_name }}</a></small>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
 </div>
 {% endblock %}
