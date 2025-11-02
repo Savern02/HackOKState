@@ -5,6 +5,9 @@ services:
       - "5000:5000"
     volumes:
       - ./instance:/app/instance
+    environment:          # <-- add this here
+      FLASK_ENV: development
+      FLASK_DEBUG: "1"
     develop:
       watch:
         - action: sync+restart

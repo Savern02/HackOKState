@@ -1,0 +1,22 @@
+{% extends 'base.html' %} 
+{% block title %}Request Volunteers{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mx-2">
+    <h1> {{ loc }}</h1>
+    <ul>
+    {% for dis in discoveries %}
+        <li> 
+            <div class="card mb-3">
+  <div class="card-body">
+    <h5 class="card-title">
+      <a href="{{ dis.link }}" target="_blank">{{ dis.name }}</a>
+    </h5>
+    <p class="card-text">{{ dis.description }}</p>
+  </div>
+</div>
+        </li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %} 
