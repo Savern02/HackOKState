@@ -76,6 +76,9 @@ class User(db.Model, UserMixin):
 	def get_pledges(self):
 		return Pledge.query.filter_by(user_id=self.user_id).all()
 
+	def get_pledged_opportunities(self):
+		return Opportunity.query.join(Pledge, Pledge.opp_id == Opportunity.opp_id).filter(Pledge.user_id == self.user_id).all()
+
 	def get_org_count_label(self):
 		count = Org.query.join(OrgMember, OrgMember.org_id == Org.org_id).filter(OrgMember.user_id == self.user_id).count()
 		return f"({count})" if count > 0 else ""
