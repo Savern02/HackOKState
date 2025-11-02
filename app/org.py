@@ -40,6 +40,7 @@ def org_detail(org_id):
     return render_template('org_detail.html', organization=organization, ownername=organization.get_owner().username)
 
 @org.route('/orgs/<int:org_id>/join', methods=['POST'])
+@login_required
 def join_org(org_id):
     organization = Org.query.get_or_404(org_id)
     if not organization.is_member_of(current_user):
