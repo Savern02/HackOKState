@@ -21,13 +21,6 @@
     <h3 class="mt-4"> Opportunities {{ organization.get_opportunities_count_label() }}</h3>
     <div class="list-group">
         {% for opportunity in organization.get_opportunities() %}
-            <div class="card">
-                <div class="card-body">
-                    <h5 class="card-title">{{ opportunity.title }}</h5>
-                    <h6 class="card-subtitle mb-2 text-muted">{{ opportunity.timestamp }}</h6>
-                    <p class="card-text">{{ opportunity.description }}</p>
-                </div>
-            </div>    
             <a href="{{ url_for('opportunity.opp_detail', opp_id=opportunity.opp_id) }}" class="list-group-item list-group-item-action">
                 <h5 class="mb-1">{{ opportunity.title }}</h5>
                 <p class="mb-1">{{ opportunity.description }}</p>
