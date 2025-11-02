@@ -143,10 +143,10 @@ class OrgMember(db.Model):
 class Opportunity(db.Model):
 	__tablename__ = 'opportunity'
 	opp_id = db.Column(db.Integer, primary_key=True)
-	org_id = db.Column(db.Integer, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'))
-	title = db.Column(db.String(255), nullable=True)
-	description = db.Column(db.Text, nullable=True)
-	timestamp = db.Column(db.DateTime, nullable=True)
+	org_id = db.Column(db.Integer, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'), nullable=False)
+	title = db.Column(db.String(255), nullable=False)
+	description = db.Column(db.Text, nullable=False)
+	timestamp = db.Column(db.DateTime, nullable=False, server_default=db.func.now())
 
 	org = db.relationship('Org', back_populates='opportunitys')
 	pledges = db.relationship('Pledge', back_populates='opportunity', lazy='dynamic')

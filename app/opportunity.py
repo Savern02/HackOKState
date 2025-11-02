@@ -12,7 +12,7 @@ def create_opportunity():
         return render_template('create-opportunity.html', org_options=org_options)
     else:
         title = request.form.get('title')
-        org_id = request.form.get('org_select')
+        org_id = request.form.get('org-id')
         description = request.form.get('description')
 
         new_opportunity = Opportunity(title=title, org_id=org_id, description=description)

@@ -5,7 +5,7 @@
 {% block content %}
 <div class="container mt-5 mx-2">
     <h2> {{ opportunity.title }} </h2>
-    <h5> By <a href="{{ opportunity.get_org().org_id }}">{{ opportunity.get_org().name }}</a></h5>
+    <h5> By <a href="{{ opportunity.org_id }}">{{ opportunity.get_org().org_name }}</a></h5>
     <hr>
     <section class="mt-5">
         <h4>Description</h4>
