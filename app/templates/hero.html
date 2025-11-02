@@ -3,14 +3,117 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-<div class="container mx-auto center">
-    <header class="row text-center mt-2 hero-section">
-        <h1 class="mx-auto mt-1">Pledge your next weekend</h1>
-        <h3 class="mx-auto mt-1 mb-4 my-0 text-muted">Make a difference.</h3>
-    </header>
-    <hr>
-    <div class="row text-center mt-4">
-        <h3><a href="{{ url_for('auth.signup') }}">Get Started</a></h3>
+<div class="hero-section d-flex align-items-center justify-content-center" style="background-color: var(--secondary-color);">
+    <div class="container">
+        <div class="row justify-content-center text-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-3" style="color: var(--primary-color);">Pledge your next weekend</h1>
+                <p class="lead mb-4" style="color: var(--success-color);">Make a difference.</p>
+                <div class="mt-5">
+                    <a href="{{ url_for('auth.signup') }}" class="btn btn-primary btn-lg px-5 py-3 shadow-sm">
+                        <i class="bi bi-arrow-right-circle me-2"></i>Get Started
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="bi bi-search display-4 mb-3" style="color: var(--primary-color);"></i>
+                    <h3 class="card-title h4 mb-3">Discover</h3>
+                    <p class="card-text">Find meaningful volunteer opportunities in your area.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="bi bi-calendar-check display-4 mb-3" style="color: var(--primary-color);"></i>
+                    <h3 class="card-title h4 mb-3">Commit</h3>
+                    <p class="card-text">Pledge your time to causes that matter to you.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card h-100 text-center p-4">
+                <div class="card-body">
+                    <i class="bi bi-heart display-4 mb-3" style="color: var(--primary-color);"></i>
+                    <h3 class="card-title h4 mb-3">Impact</h3>
+                    <p class="card-text">Make a lasting difference in your community.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mt-5 pt-5">
+        <div class="row justify-content-center">
+            <div class="col-lg-10">
+                <div class="card shadow-sm border-0 p-4 mb-5">
+                    <h2 class="h3 mb-4" style="color: var(--primary-color);">
+                        <i class="bi bi-lightbulb me-2"></i>Our Inspiration
+                    </h2>
+                    <div class="row g-4">
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded-3 h-100">
+                                <h4 class="h5 mb-3" style="color: var(--primary-color);">
+                                    <i class="bi bi-code-square me-2"></i>Civic Hacking Legacy
+                                </h4>
+                                <p class="mb-0">Drawing inspiration from former projects that made a difference, we <em>realized</em> how we can create meaningful impact in our communities.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded-3 h-100">
+                                <h4 class="h5 mb-3" style="color: var(--primary-color);">
+                                    <i class="bi bi-search-heart me-2"></i>Filling the Gap
+                                </h4>
+                                <p class="mb-0">Recognizing the lack of accessible volunteer platforms, we set out to create a solution that connects people with opportunities to serve.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="p-3 bg-light rounded-3 h-100">
+                                <h4 class="h5 mb-3" style="color: var(--primary-color);">
+                                    <i class="bi bi-lightning-charge me-2"></i>Powered by Passion
+                                </h4>
+                                <p class="mb-0">Fueled by determination (and plenty of RedBull), we channeled our <em>ENERGY</em> into creating something meaningful.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card shadow-sm border-0 p-4">
+                    <h2 class="h3 mb-4" style="color: var(--primary-color);">
+                        <i class="bi bi-gear me-2"></i>What VolunTold Does
+                    </h2>
+                    <p class="lead mb-4">VolunTold creates and fosters a community of dedicated volunteers through innovative features:</p>
+                    
+                    <div class="row g-4">
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-compass display-6 me-3" style="color: var(--primary-color);"></i>
+                                    <h3 class="h4 mb-0">Discover Opportunities</h3>
+                                </div>
+                                <p class="mb-0">Explore volunteer opportunities in your area through our Discover tab, powered by Google Gemini. Our community-driven approach allows users to share and discover local volunteer opportunities, creating a growing network of possibilities.</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="p-4 bg-light rounded-3 h-100">
+                                <div class="d-flex align-items-center mb-3">
+                                    <i class="bi bi-people display-6 me-3" style="color: var(--primary-color);"></i>
+                                    <h3 class="h4 mb-0">Create & Connect</h3>
+                                </div>
+                                <p class="mb-0">Organizations can create and manage volunteer opportunities directly through our platform. This feature enables quick mobilization of volunteers, especially crucial during crisis situations, ensuring help reaches where it's needed most.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {%endblock %}
