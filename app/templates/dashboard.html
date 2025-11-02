@@ -16,7 +16,7 @@
         {% if org.get_opportunities_count() > 0 %}
             <ul>
             {% for opp in org.get_opportunities() %}
-                <li><a href="{{ url_for('opportunity.opportunity_detail', opportunity_id=opp.opportunity_id) }}">{{ opp.title }}</a></li>
+                <li><a href="{{ url_for('opportunity.opp_detail', opp_id=opp.opp_id) }}">{{ opp.title }}</a></li>
             {% endfor %}
             </ul>
         {% endif %}
