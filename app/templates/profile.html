@@ -1,45 +1,59 @@
 {% extends 'base.html' %} 
 
-{% block title %}Home{% endblock %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
 
 {% block content %}
-<h1>{{user.username}}'s Profile</h1>
-{% if current_user and not user==current_user %}
-    {% if is_friend %}
+<div class="container">
+    <div class="jumbotron jumbotron-fluid text-center my-4">
+        <h1> {{ user.username }}'s Profile </h1>
+        {% if current_user and not user==current_user %}
+        {% if is_friend %}
         <form method="post" action="{{ url_for('users.remove_friend', username=user.username) }}">
             <button type="submit" class="btn btn-danger">Remove Friend</button>
         </form>
-    {% else %}
-        {% if is_pending_friend %}
-            <p>Friend Request Sent</p>
-        {% elif has_request_from %}
-            <form method="post" action="{{ url_for('users.accept_friend', username=user.username) }}">
-                <button type="submit" class="btn btn-success">Accept Friend Request</button>
-            </form>
         {% else %}
-            <form method="post" action="{{ url_for('users.add_friend', username=user.username) }}">
-                <button type="submit" class="btn btn-primary">Add Friend</button>
-            </form>
+        {% if is_pending_friend %}
+        <p>Friend Request Sent</p>
+        {% elif has_request_from %}
+        <form method="post" action="{{ url_for('users.accept_friend', username=user.username) }}">
+            <button type="submit" class="btn btn-success">Accept Friend Request</button>
+        </form>
+        {% else %}
+        <form method="post" action="{{ url_for('users.add_friend', username=user.username) }}">
+            <button type="submit" class="btn btn-primary">Add Friend</button>
+        </form>
         {% endif %}
-    {% endif %}
-{% endif %}
-<hr>
-<section>
-    <h3>Organizations {{ user.get_org_count_label() }}</h3>
-    <div class="list-group">
-        {% for organization in user.get_orgs() %}
-            <p><a href="{{ url_for('org.org_detail', org_id=organization.org_id) }}" class="list-group-item list-group-item-action">{{ organization.org_name }}</a></p>
-        {% endfor %}
+        {% endif %}
+        {% endif %}
     </div>
-</section>
-<hr>
-<section>
-    <h3>Pledges</h3>
-    {% for pledge in user.get_pledges() %}
-        <p>
-            Pledged to <a href="{{ url_for('org.org_detail', org_id=pledge.opportunity.org.org_id) }}">{{ pledge.opportunity.org.org_name }}</a> for opportunity 
-            <a href="{{ url_for('opportunity.opp_detail', opp_id=pledge.opportunity.opp_id) }}" >{{ pledge.opportunity.title }}</a>
-        </p>
-    {% endfor %}
-</section>
+    <hr>
+    <section class="container mt-3 mb-3">
+        <h3>Organizations {{ user.get_org_count_label() }}</h3>
+        <div class="list-group">
+            {% for organization in user.get_orgs() %}
+            <p><a href="{{ url_for('org.org_detail', org_id=organization.org_id) }}"
+                    class="list-group-item list-group-item-action">{{ organization.org_name }}</a></p>
+            {% endfor %}
+        </div>
+    </section class="container mt-3 mb-3">
+    <hr>
+    <section class="container mt-3 mb-3">
+        <h3>Pledges</h3>
+        <div class="card-deck row">
+        {% for pledge in user.get_pledges() %}
+            <div class="card col-sm-2 mx-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{ pledge.opportunity.title }}</h5>
+                    <p class="card-text">{{ pledge.opportunity.small_description() }}</p>
+                    <a href="{{ url_for('opportunity.opp_detail', opp_id=pledge.opportunity.opp_id) }}" class="btn btn-primary">View Details</a>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">By <a href="{{ url_for('org.org_detail', org_id=pledge.opportunity.org_id) }}">{{ pledge.opportunity.get_org().org_name }}</a></small>
+                </div>
+            </div>
+        {% endfor %}
+        </div>
+    </section class="container mt-3 mb-3">
+</div>
+
 {% endblock %}
