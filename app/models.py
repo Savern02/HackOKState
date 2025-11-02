@@ -12,7 +12,7 @@ class User(db.Model, UserMixin):
 
 	# relationships
 	pledges = db.relationship('Pledge', back_populates='user', lazy='dynamic')
-	groups = db.relationship('Group', secondary='group_member', back_populates='members', lazy='dynamic')
+	organizations = db.relationship('Org', backref='creator', lazy='dynamic')
 
 	def __repr__(self):
 		return f"<User {self.user_id} {self.email}>"
@@ -57,7 +57,7 @@ class User(db.Model, UserMixin):
 			db.session.delete(friendship)
 			db.session.commit()
 
-	def friends(self):
+	def get_friends(self):
 		friendships = Friends.query.filter(
 			((Friends.friend_a == self.user_id) | (Friends.friend_b == self.user_id)) &
 			(Friends.accepted == True)
@@ -69,6 +69,16 @@ class User(db.Model, UserMixin):
 			else:
 				friend_ids.add(friendship.friend_a)
 		return User.query.filter(User.user_id.in_(friend_ids)).all()
+	
+	def get_orgs(self):
+		return Org.query.join(OrgMember, OrgMember.org_id == Org.org_id).filter(OrgMember.user_id == self.user_id).all()
+	
+	def get_pledges(self):
+		return Pledge.query.filter_by(user_id=self.user_id).all()
+
+	def get_org_count_label(self):
+		count = Org.query.join(OrgMember, OrgMember.org_id == Org.org_id).filter(OrgMember.user_id == self.user_id).count()
+		return f"({count})" if count > 0 else ""
 
 class Friends(db.Model):
 	__tablename__ = 'friends'
@@ -79,24 +89,6 @@ class Friends(db.Model):
 	def __repr__(self):
 		return f"<Friends {self.friend_a} - {self.friend_b}>"
 
-
-class Group(db.Model):
-	__tablename__ = 'group'
-	group_id = db.Column(db.BigInteger, primary_key=True)
-
-	# members via association table `group_member`
-	members = db.relationship('User', secondary='group_member', back_populates='groups', lazy='dynamic')
-
-	def __repr__(self):
-		return f"<Group {self.group_id}>"
-
-
-class GroupMember(db.Model):
-	__tablename__ = 'group_member'
-	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id', name='fk_group_member_group_id_group_group_id'), primary_key=True)
-	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_group_member_user_id_user_user_id'), primary_key=True)
-
-
 class Org(db.Model):
 	__tablename__ = 'org'
 	org_id = db.Column(db.Integer, primary_key=True)
@@ -105,8 +97,47 @@ class Org(db.Model):
 
 	opportunitys = db.relationship('Opportunity', back_populates='org', lazy='dynamic')
 
+	members = db.relationship('OrgMember', backref='org', lazy='dynamic')
+
 	def __repr__(self):
 		return f"<Org {self.org_id}>"
+
+	def get_members(self):
+		return User.query.join(OrgMember, OrgMember.user_id == User.user_id).filter(OrgMember.org_id == self.org_id).all()
+
+	def get_member_count(self):
+		return OrgMember.query.filter_by(org_id=self.org_id).count()
+
+	def get_owner(self):
+		return User.query.get(self.creator_id)
+
+	def is_member_of(self, user):
+		membership = OrgMember.query.filter_by(org_id=self.org_id, user_id=user.user_id).first()
+		return membership is not None
+
+	def add_member(self, user):
+		if not self.is_member_of(user):
+			new_member = OrgMember(org_id=self.org_id, user_id=user.user_id)
+			db.session.add(new_member)
+			db.session.commit()
+
+	def get_opportunities(self):
+		return Opportunity.query.filter_by(org_id=self.org_id).all()
+
+	def get_opportunities_count(self):
+		return Opportunity.query.filter_by(org_id=self.org_id).count()
+	
+	def get_opportunities_count_label(self):
+		count = self.get_opportunities_count()
+		return f"({count})" if count > 0 else ""
+
+class OrgMember(db.Model):
+	__tablename__ = 'org_member'
+	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_org_member_org_id_org_org_id'), primary_key=True)
+	user_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_org_member_user_id_user_user_id'), primary_key=True)
+
+	def __repr__(self):
+		return f"<OrgMember org={self.org_id} user={self.user_id}>"
 
 
 class Opportunity(db.Model):
@@ -115,6 +146,7 @@ class Opportunity(db.Model):
 	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'))
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
+	timestamp = db.Column(db.DateTime, nullable=True)
 
 	org = db.relationship('Org', back_populates='opportunitys')
 	pledges = db.relationship('Pledge', back_populates='opportunity', lazy='dynamic')
@@ -134,19 +166,6 @@ class Scrape(db.Model):
 	def __repr__(self):
 		return f"<Scrape {self.scrape_id}>"
 
-
-class Promotes(db.Model):
-	__tablename__ = 'promotes'
-	promotes_id = db.Column(db.BigInteger, primary_key=True)
-	group_id = db.Column(db.BigInteger, db.ForeignKey('group.group_id', name='fk_promotes_group_id_group_group_id'))
-	scrape_id = db.Column(db.BigInteger, db.ForeignKey('scrape.scrape_id', name='fk_promotes_scrape_id_scrape_scrape_id'), nullable=True)
-	opp_id = db.Column(db.BigInteger, db.ForeignKey('opportunity.opp_id', name='fk_promotes_opp_id_opportunity_opp_id'), nullable=True)
-	type = db.Column(db.String(50), nullable=True)
-
-	def __repr__(self):
-		return f"<Promotes {self.promotes_id} group={self.group_id}>"
-
-
 class Pledge(db.Model):
 	__tablename__ = 'pledge'
 	pledge_id = db.Column(db.BigInteger, primary_key=True)
@@ -161,4 +180,10 @@ class Pledge(db.Model):
 
 	def __repr__(self):
 		return f"<Pledge {self.pledge_id} user={self.user_id}>"
+
+	def get_opportunity(self):
+		return Opportunity.query.get(self.opp_id)
+	
+	def get_user(self):
+		return User.query.get(self.user_id)
 

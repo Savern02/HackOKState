@@ -4,7 +4,7 @@
 
 {% block content %}
 <h1>{{user.username}}'s Profile</h1>
-{% if current_user %}
+{% if current_user and not user==current_user %}
     {% if is_friend %}
         <form method="post" action="{{ url_for('users.remove_friend', username=user.username) }}">
             <button type="submit" class="btn btn-danger">Remove Friend</button>
@@ -23,20 +23,23 @@
         {% endif %}
     {% endif %}
 {% endif %}
-<br>
+<hr>
 <section>
-    <h3>Friends</h3>
-    {% for friend in friends %}
-        <p><a href="{{ url_for('users.user_profile', username=friend.username) }}">{{ friend.username }}</a></p>
-    {% endfor %}
+    <h3>Organizations {{ user.get_org_count_label() }}</h3>
+    <div class="list-group">
+        {% for organization in user.get_orgs() %}
+            <p><a href="{{ url_for('org.org_detail', org_id=organization.org_id) }}" class="list-group-item list-group-item-action">{{ organization.org_name }}</a></p>
+        {% endfor %}
+    </div>
 </section>
-<section>
-    <h3>Organizations</h3>
-</section>
-<section>
-    <h3>Groups</h3>
-</section>
+<hr>
 <section>
     <h3>Pledges</h3>
+    {% for pledge in user.get_pledges() %}
+        <p>
+            Pledged to <a href="{{ url_for('org.org_detail', org_id=pledge.opportunity.org.org_id) }}">{{ pledge.opportunity.org.org_name }}</a> for opportunity 
+            <a href="{{ url_for('opportunities.opportunity_detail', opportunity_id=pledge.opportunity.opp_id) }}" >{{ pledge.opportunity.title }}</a>
+        </p>
+    {% endfor %}
 </section>
 {% endblock %}
