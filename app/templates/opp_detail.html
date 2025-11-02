@@ -1,0 +1,35 @@
+{% extends 'base.html' %} 
+
+{% block title %} VolunTold {% endblock %}
+
+{% block content %}
+<div class="container mt-5 mx-2">
+    <h2> {{ opportunity.title }} </h2>
+    <h5> By <a href="{{ url_for('org.org_detail', org_id=opportunity.org_id) }}">{{ opportunity.get_org().org_name }}</a></h5>
+    <form method="post" action="{{ url_for('opportunity.pledge', opp_id=opportunity.opp_id) }}">
+        {% if current_user.is_authenticated and not opportunity.is_pledged_by(current_user) %}
+            <button type="submit" class="btn btn-primary">Pledge for Opportunity</button>
+        {% elif current_user.is_authenticated and opportunity.is_pledged_by(current_user) %}
+            <p>You have pledged for this opportunity.</p>
+        {% else %}
+            <p><a href="{{ url_for('auth.login') }}">Log in</a> to join this organization.</p>
+        {% endif %}
+    </form>
+    <hr>
+
+    <section class="mt-5">
+        <h4>Description</h4>
+        <p> {{ opportunity.description }} </p>
+    </section>
+    <hr>
+    <section class="mt-5">
+        <h4>Pledged Volunteers</h4>
+        <div class="list-group">
+        {% for user in opportunity.get_pledged_users() %}
+            <a href="{{ url_for('users.user_profile', username=user.username) }}" class="list-group-item list-group-item-action">{{ user.username }}</a>
+        {% else %}
+            <p>No volunteers have pledged for this opportunity yet.</p>
+        {% endfor %}
+        </div>
+</div>
+{% endblock %}

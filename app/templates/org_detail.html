@@ -4,6 +4,39 @@
 
 {% block content %}
 <div class="container mt-5 mx-2">
-    <h2> {{ organization.org_name }} </h2>
+    <h1> {{ organization.org_name }} </h1>
+    <div class="">
+        <h4 class="text-muted"> Made by <a href="{{ url_for('users.user_profile', username=ownername) }}"> {{ ownername }} </a></h4>
+        <form method="post" action="{{ url_for('org.join_org', org_id=organization.org_id) }}">
+            {% if current_user.is_authenticated and not organization.is_member_of(current_user) %}
+                <button type="submit" class="btn btn-primary">Join Organization</button>
+            {% elif current_user.is_authenticated and organization.is_member_of(current_user) %}
+                <p>You are a member of this organization.</p>
+            {% else %}
+                <p><a href="{{ url_for('auth.login') }}">Log in</a> to join this organization.</p>
+            {% endif %}
+        </form>
+    </div>
+    <hr>
+    <h3 class="mt-4"> Opportunities {{ organization.get_opportunities_count_label() }}</h3>
+    <div class="list-group">
+        {% for opportunity in organization.get_opportunities() %}
+            <a href="{{ url_for('opportunity.opp_detail', opp_id=opportunity.opp_id) }}" class="list-group-item list-group-item-action">
+                <h5 class="mb-1">{{ opportunity.title }}</h5>
+                <p class="mb-1">{{ opportunity.description }}</p>
+            </a>
+        {% else %}
+            <p>No opportunities available at the moment.</p>
+        {% endfor %}
+    </div> 
+    <hr>
+    <h3 class="mt-4"> Members ({{ organization.get_member_count() }}) </h3>
+    <div class="list-group">
+        {% for member in organization.get_members() %}
+            <a href="{{ url_for('users.user_profile', username=member.username) }}" class="list-group-item list-group-item-action">
+                {{ member.username }}
+            </a>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

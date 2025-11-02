@@ -15,8 +15,7 @@ def user_profile(username):
     is_friend = current_user.is_authenticated and current_user.is_friend(user)
     is_pending_friend = current_user.is_authenticated and current_user.has_requested_friendship(user)
     has_request_from = current_user.is_authenticated and user.has_requested_friendship(current_user)
-    friends = user.friends()
-    return render_template('profile.html', user=user, is_friend=is_friend, is_pending_friend=is_pending_friend, has_request_from=has_request_from, friends=friends)
+    return render_template('profile.html', user=user, is_friend=is_friend, is_pending_friend=is_pending_friend, has_request_from=has_request_from)
 
 @users.route('/users/<string:username>/add_friend', methods=['POST'])
 @login_required
