@@ -186,8 +186,8 @@ class Scrape(db.Model):
 	name = db.Column(db.String(255), nullable=True)
 	link = db.Column(db.String(500), nullable=True)
 	location = db.Column(db.String(100), nullable=True)
-
 	description = db.Column(db.Text, nullable=True)
+	type = db.Column(db.String(100), nullable=True)
 
 	pledges = db.relationship('Pledge', back_populates='scrape', lazy='dynamic')
 
