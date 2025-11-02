@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light d-flex flex-column min-vh-100">
+    <header>
+        {% include 'navbar.html' %}
+    </header>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <footer class="mt-auto">
+        <p class="text-center">made@<a href="https://www.hackokstate.com/">hackokstate</a></p>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
