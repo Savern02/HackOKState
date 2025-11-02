@@ -12,6 +12,9 @@ on:
 # Define the jobs to run in this workflow
 jobs:
   build_and_push:
+    permissions:
+      contents: read # Required for actions/checkout
+      packages: write # <--- THIS IS THE CRITICAL FIX for GHCR push
     # Use Ubuntu as the runner environment
     runs-on: ubuntu-latest
     
