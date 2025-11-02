@@ -3,11 +3,40 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-<div class="container mt-5 mx-2">
-    <h1>{{name}}'s Profile</h1>
-    <h3>Friends</h3> 
-    <h3>Organizations</h3> 
-    <h3>Groups</h3> 
-    <h3>Pledges</h3> 
-</div>
+<h1>{{user.username}}'s Profile</h1>
+{% if current_user %}
+    {% if is_friend %}
+        <form method="post" action="{{ url_for('users.remove_friend', username=user.username) }}">
+            <button type="submit" class="btn btn-danger">Remove Friend</button>
+        </form>
+    {% else %}
+        {% if is_pending_friend %}
+            <p>Friend Request Sent</p>
+        {% elif has_request_from %}
+            <form method="post" action="{{ url_for('users.accept_friend', username=user.username) }}">
+                <button type="submit" class="btn btn-success">Accept Friend Request</button>
+            </form>
+        {% else %}
+            <form method="post" action="{{ url_for('users.add_friend', username=user.username) }}">
+                <button type="submit" class="btn btn-primary">Add Friend</button>
+            </form>
+        {% endif %}
+    {% endif %}
+{% endif %}
+<br>
+<section>
+    <h3>Friends</h3>
+    {% for friend in friends %}
+        <p><a href="{{ url_for('users.user_profile', username=friend.username) }}">{{ friend.username }}</a></p>
+    {% endfor %}
+</section>
+<section>
+    <h3>Organizations</h3>
+</section>
+<section>
+    <h3>Groups</h3>
+</section>
+<section>
+    <h3>Pledges</h3>
+</section>
 {% endblock %}
