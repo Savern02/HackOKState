@@ -25,7 +25,8 @@ def create_opportunity():
 @opportunity_bp.route('/opportunities', methods=['GET'])
 def opportunities():
     opportunities = Opportunity.query.all()
-    return render_template('opportunities.html', opportunities=opportunities)
+    popular_opportunities = sorted(opportunities, key=lambda opp: opp.pledges.count(), reverse=True)[:5]
+    return render_template('opportunities.html', opportunities=opportunities, popular_opportunities=popular_opportunities)
 
 @opportunity_bp.route('/opportunities/<int:opp_id>', methods=['GET'])
 def opp_detail(opp_id):

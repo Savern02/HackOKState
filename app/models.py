@@ -170,6 +170,12 @@ class Opportunity(db.Model):
 			db.session.add(new_pledge)
 			db.session.commit()
 
+	def small_description(self, length=100):
+		if len(self.description) <= length:
+			return self.description
+		else:
+			return self.description[:length-3] + "..."
+
 class Scrape(db.Model):
 	__tablename__ = 'scrape'
 	scrape_id = db.Column(db.Integer, primary_key=True)

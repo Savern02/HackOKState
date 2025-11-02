@@ -3,7 +3,14 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h3><a href="{{ url_for('auth.login') }}">Log in</a> or <a href="{{ url_for('auth.signup') }}">register</a> to start volunteering.</h3>
+<div class="container mx-auto center">
+    <header class="row text-center mt-2 hero-section">
+        <h1 class="mx-auto mt-1">Pledge your next weekend</h1>
+        <h3 class="mx-auto mt-1 mb-4 my-0 text-muted">Make a difference.</h3>
+    </header>
+    <hr>
+    <div class="row text-center mt-4">
+        <h3><a href="{{ url_for('auth.signup') }}">Get Started</a></h3>
+    </div>
 </div>
 {%endblock %}
