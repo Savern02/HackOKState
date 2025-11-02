@@ -3,49 +3,63 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-<div class="container">
-	<div class="jumbotron jumbotron-fluid text-center my-4">
-		<h1> Discover Volunteer Opportunities Near You </h1>
-		<h3 class="text-muted"> Select your location: </h3>
-		<div class="row justify-content-center mt-4 mb-4">
-			<div class="col-lg-4">
-				<form method="post" action="{{ url_for('discover.locations_redirection') }}">
-					<div class="form-group">
-						<div class="input-group">
-							<select id="location" name="location" required class="form-control discover-loc-select">
-								{% for l in loc %}
-								<option value="{{ l.location }}">{{ l.location }}</option>
-								{% endfor %}
-							</select>
-							<div class="input-group-append">
-								<button type="submit" class="form-control btn btn-primary discover-loc-submit">See
-									Opportunities</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-	<hr>
-	<section class="container mt-3 mb-3 text-center my-4">
-		<h3>Found Opportunities Online?</h3>
-		<h5 class="text-muted">Submit a link:</h5>
-		<div class="row justify-content-center">
-			<div class="col-lg-4">
-				<form action="/request_string" method="post" class="mt-4">
-					<div class="form-group mb-3">
-						<div class="input-group">
-							<input type="url" id="volunteer-link" name="data" required class="form-control"
-								placeholder="https://example.com/volunteer-opportunity">
-							<div class="input-group-append">
-								<button type="submit" class="btn btn-secondary">Submit Link</button>
-							</div>
-						</div>
-					</div>
-				</form>
-			</div>
-		</div>
-	</section>
+<div class="hero-section d-flex align-items-center" style="background-color: var(--secondary-color); min-height: 40vh;">
+    <div class="container">
+        <div class="text-center">
+            <h1 class="display-4 fw-bold mb-3" style="color: var(--primary-color);">
+                <i class="bi bi-geo-alt me-2"></i>Discover Opportunities Near You
+            </h1>
+            <p class="lead mb-5" style="color: var(--success-color);">Find meaningful ways to make a difference in your community</p>
+            
+            <div class="row justify-content-center">
+                <div class="col-lg-6">
+                    <div class="card shadow-sm border-0 p-4">
+                        <form method="post" action="{{ url_for('discover.locations_redirection') }}">
+                            <div class="form-group">
+                                <label for="location" class="form-label mb-3">Select your location:</label>
+                                <div class="input-group input-group-lg">
+                                    <select id="location" name="location" required 
+                                            class="form-select discover-loc-select">
+                                        {% for l in loc %}
+                                        <option value="{{ l.location }}">{{ l.location }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-primary discover-loc-submit">
+                                        <i class="bi bi-search me-2"></i>Find
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm border-0 p-4">
+                <div class="text-center">
+                    <h2 class="h3 mb-3" style="color: var(--primary-color);">
+                        <i class="bi bi-plus-circle me-2"></i>Found Opportunities Online?
+                    </h2>
+                    <p class="text-muted mb-4">Share volunteer opportunities with our community</p>
+                    
+                    <form action="/request_string" method="post">
+                        <div class="input-group input-group-lg mb-3">
+                            <input type="url" id="volunteer-link" name="data" required 
+                                   class="form-control" 
+                                   placeholder="https://example.com/volunteer-opportunity">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-2"></i>Submit
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}
