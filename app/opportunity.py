@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash
 from flask_login import current_user, login_required
-from .models import Opportunity, Org, User
+from .models import Opportunity, Pledge
 from . import db
 
 opportunity_bp = Blueprint('opportunity', __name__)
@@ -30,4 +30,6 @@ def opportunities():
 @opportunity_bp.route('/opportunities/<int:opp_id>', methods=['GET'])
 def opp_detail(opp_id):
     opportunity = Opportunity.query.get_or_404(opp_id)
-    return render_template('opp_detail.html', opportunity=opportunity)
+    user_is_pledged = Opportunity.query.join(Opportunity.pledges).filter(
+        Opportunity.opp_id == opp_id, Pledge.user_id == current_user.user_id).count() > 0 if current_user.is_authenticated else False
+    return render_template('opp_detail.html', opportunity=opportunity, user_is_pledged=user_is_pledged)
