@@ -16,8 +16,15 @@
             <textarea name="description" placeholder="Description" required></textarea>
         </div>
         <div class="mb-3">
-            <label for="org_id" class="form-label">Organization ID</label>
-            <input type="text" name="org_id" placeholder="Organization ID" required>
+            <form action="/submit-form" method="post">
+            <label for="org-select">Choose an organization:</label>
+            <select id="org-select" name="org">
+                {% for org in orgs %}
+                    <option value="{{ org.org_id }}">{{ org.org_name }}</option>
+                {% endfor %}
+            </select>
+            <button type="submit">Submit</button>
+            </form>
         </div>
         <button type="submit">Submit</button>
     </form>

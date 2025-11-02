@@ -53,7 +53,7 @@ class Org(db.Model):
 	org_name = db.Column(db.String(255), nullable=False)
 	creator_id = db.Column(db.BigInteger, db.ForeignKey('user.user_id', name='fk_org_creator_id_user_user_id'))
 
-	opportunitys = db.relationship('opportunity', back_populates='org', lazy='dynamic')
+	opportunity = db.relationship('Opportunity', back_populates='org', lazy='dynamic')
 
 	def __repr__(self):
 		return f"<Org {self.org_id}>"
@@ -66,7 +66,7 @@ class Opportunity(db.Model):
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 
-	org = db.relationship('Org', back_populates='opportunitys')
+	org = db.relationship('Org', back_populates='opportunity')
 	pledges = db.relationship('Pledge', back_populates='opportunity', lazy='dynamic')
 
 	def __repr__(self):
@@ -106,7 +106,7 @@ class Pledge(db.Model):
 	type = db.Column(db.String(50), nullable=True)
 
 	user = db.relationship('User', back_populates='pledges')
-	opportunity = db.relationship('opportunity', back_populates='pledges')
+	opportunity = db.relationship('Opportunity', back_populates='pledges')
 	scrape = db.relationship('Scrape', back_populates='pledges')
 
 	def __repr__(self):
