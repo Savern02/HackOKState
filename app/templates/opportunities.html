@@ -5,6 +5,9 @@
 {% block content %}
 <div class="container mt-5 mx-2">
     <h1> Opportunities </h1>
+    <ul class="navbar-nav ms-auto">
+        <a href="{{ url_for('opportunity.create_opportunity') }}">Create Opportunity</a>
+    </ul>
     <ul>
     {% for opportunity in opportunities %}
         <li> 

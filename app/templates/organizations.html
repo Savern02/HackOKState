@@ -5,6 +5,9 @@
 {% block content %}
 <div class="container mt-5 mx-2">
     <h1> Organizations </h1>
+        <ul class="navbar-nav ms-auto">
+        <a href="{{ url_for('org.create_org') }}">Create Organization</a>
+    </ul>
     <ul>
     {% for org in orgs %}
         <li> 

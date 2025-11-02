@@ -5,7 +5,7 @@ from . import db
 
 opportunity_bp = Blueprint('opportunity', __name__)
 
-@opportunity_bp.route('/create-opportunity', methods=['POST'])
+@opportunity_bp.route('/create-opportunity')
 def create_opportunity():
     title = request.form.get('title')
     org_id = request.form.get('org_id')
