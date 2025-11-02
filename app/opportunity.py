@@ -5,10 +5,6 @@ from . import db
 
 opportunity_bp = Blueprint('opportunity', __name__)
 
-@opportunity_bp.route('/opportunity')
-def opportunities():
-    return render_template('opportunities.html')
-
 @opportunity_bp.route('/create-opportunity', methods=['POST'])
 def create_opportunity():
     title = request.form.get('title')
