@@ -6,6 +6,7 @@ from . import db
 opportunity_bp = Blueprint('opportunity', __name__)
 
 @opportunity_bp.route('/opportunities/create', methods=['GET', 'POST'])
+@login_required
 def create_opportunity():
     if request.method == 'GET':
         org_options = current_user.organizations
