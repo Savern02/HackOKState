@@ -5,19 +5,18 @@ from . import db
 
 opportunity_bp = Blueprint('opportunity', __name__)
 
-@opportunity_bp.route('/create-opportunity', methods=['GET', 'POST'])
+@opportunity_bp.route('/create-opportunity')
 def create_opportunity():
-    if request.method == 'POST':
-        title = request.form.get('title')
-        org_id = request.form.get('org_id')
-        description = request.form.get('description')
+    title = request.form.get('title')
+    org_id = request.form.get('org_id')
+    description = request.form.get('description')
 
-        new_opportunity = Opportunity(title=title, org_id=org_id, description=description)
+    new_opportunity = Opportunity(title=title, org_id=org_id, description=description)
 
-        db.session.add(new_opportunity)
-        db.session.commit()
+    db.session.add(new_opportunity)
+    db.session.commit()
 
-        flash('Volunteer request submitted successfully!', 'success')
+    flash('Volunteer request submitted successfully!', 'success')
     return render_template('create-opportunity.html')
 
 @opportunity_bp.route('/opportunity')

@@ -112,7 +112,7 @@ class Org(db.Model):
 class Opportunity(db.Model):
 	__tablename__ = 'opportunity'
 	opp_id = db.Column(db.Integer, primary_key=True)
-	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'), nullable=False)
+	org_id = db.Column(db.BigInteger, db.ForeignKey('org.org_id', name='fk_opportunity_org_id_org_org_id'))
 	title = db.Column(db.String(255), nullable=True)
 	description = db.Column(db.Text, nullable=True)
 
