@@ -4,13 +4,13 @@
 {% block content %}
 <div class="container mt-5 mx-2">
   <div align="right">
-  <form action="/request_string" method="post">
+  <form action="/filter" method="post">
 		<label for="city-filter">
 			Select A City Name:
 		</label>
-		<select id="location" name="location">
+		<select id="type" name="type">
 			  {% for l in loc %}
-        	<option value="{{ l.location }}">{{ l.location }}</option>
+        	<option value="{{ l.type }}">{{ l.type }}</option>
     		{% endfor %}
 		</select>
 		<button type="submit">Select</button>

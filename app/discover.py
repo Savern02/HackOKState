@@ -13,6 +13,12 @@ def select_region():
     locations = Scrape.query.with_entities(Scrape.location).filter(Scrape.location != None).distinct().all()
     return render_template('discoverLoc.html', loc=locations)
 
+@discover.route('/filter/<type>', methods=['POST'])
+def filter(type):
+    data = request.form.get('type')  # get the string from form data
+    show_discoveries_filter = Scrape.query.filter_by(type=type).all()
+    return render_template('discover.html', discoveries=show_discoveries)
+
 #handles the string (request) received from the frontend 
 @discover.route('/request_string', methods=['POST'])
 def request_string():
