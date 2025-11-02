@@ -16,10 +16,13 @@ from pydantic import BaseModel, Field
 
 # ---------- html ---------- \
 def getHTML(url):
+    if not url.startswith('http'):
+        url = "https://" + url
+    
     response = requests.get(url)
     if response.status_code != 200:
-        logging.error("Failed:", response.status_code)
-        return
+        print("Failed:", response.status_code)
+        return None
     html_data = response.text
     return html_data
 
@@ -70,10 +73,14 @@ def call_gemini(html_data: str):
   
 def accept_link_to_scrape(url):
     load_dotenv() #load key from .env file
-    result = call_gemini(getHTML(url))
+    HTML = getHTML(url)
+    if HTML == None:
+        logging.error("Failed to get HTML @" + url)
+        return 
+    result = call_gemini(HTML)
     if result == None:
-        logging.error("Failed to get HTML or AI response." + msg)
-    with open("response.json", "w") as file:
+        logging.error("AI response.")
+    with open("app/response.json", "w") as file:
         file.write(result)
 
 
@@ -94,8 +101,3 @@ def load_json_to_db(url):
     
     db.session.commit()
  
-
-if __name__ == "__main__":
-    test_url = "https://www.cityoftulsa.org/serve-tulsans/organizations/list-of-organizations/"
-    accept_link_to_scrape(test_url)
-    

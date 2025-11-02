@@ -13,21 +13,25 @@ def select_region():
     locations = Scrape.query.with_entities(Scrape.location).filter(Scrape.location != None).distinct().all()
     return render_template('discoverLoc.html', loc=locations)
 
-@discover.route('/filter/<type>', methods=['POST'])
-def filter(type):
-    data = request.form.get('type')  # get the string from form data
-    show_discoveries_filter = Scrape.query.filter_by(type=type).all()
-    return render_template('discover.html', discoveries=show_discoveries)
 
 #handles the string (request) received from the frontend 
 @discover.route('/request_string', methods=['POST'])
-def request_string():
-    async def func(): 
-        data = request.form.get('data')  # get the string from form data
-        accept_link_to_scrape(data)
-        load_json_to_db(data)  # process the string as needed
-    asyncio.run(func()) 
+def request_string(): 
+    data = request.form.get('data')  # get the string from form data
+    accept_link_to_scrape(data)
+    load_json_to_db(data)  # process the string as needed
     return redirect(url_for('discover.select_region'))  # redirect back to the locations page
+
+#drop down box logic below
+'''@discover.route('/locations_redirection', methods=['POST'])
+def locations_redirection(): 
+    location = request.form.get('location')
+    return redirect(url_for('discover.show_discoveries', location=location))
+@discover.route('/filter/<type>', methods=['POST'])'''
+def filter(type): 
+    data = request.form.get('type')  # get the string from form data
+    show_discoveries_filter = Scrape.query.filter_by(type=type).all()
+    return render_template('discover.html', discoveries=show_discoveries)
 
 @discover.route('/locations_redirection', methods=['POST'])
 def locations_redirection(): 
