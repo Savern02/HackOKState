@@ -17,9 +17,9 @@
         </div>
         <div class="mb-3">
             <form action="/submit-form" method="post">
-            <label for="org-select">Choose an organization:</label>
-            <select id="org-select" name="org">
-                {% for org in orgs %}
+            <label for="org-id">Choose an organization:</label>
+            <select id="org-id" name="org-id">
+                {% for org in org_options %}
                     <option value="{{ org.org_id }}">{{ org.org_name }}</option>
                 {% endfor %}
             </select>

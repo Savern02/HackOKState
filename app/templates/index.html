@@ -3,7 +3,9 @@
 {% block title %} VolunTold {% endblock %}
 
 {% block content %}
-    <div class="container mt-5">
-        Homepage
-    </div>
+    {% if current_user.is_authenticated %}
+        {% include 'dashboard.html' %}
+    {% else %}
+        {% include 'hero.html' %} 
+    {% endif %}
 {% endblock %}
