@@ -31,3 +31,10 @@ def opportunities():
 def opp_detail(opp_id):
     opportunity = Opportunity.query.get_or_404(opp_id)
     return render_template('opp_detail.html', opportunity=opportunity)
+
+def pledge(opp_id):
+    opportunity = Opportunity.query.get_or_404(opp_id)
+    if not opportunity.is_pledged_by(current_user):
+        opportunity.add_pledged_user(current_user)
+        # flash('You have pledged for this opportunity!', 'success')
+    return redirect(url_for('opportunity.opp_detail', opp_id=opp_id), 302)
